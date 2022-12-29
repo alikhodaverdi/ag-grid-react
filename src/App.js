@@ -95,7 +95,7 @@ function App() {
 
 
   return (
-    <div className='ag-theme-alpine' style={{ height: 500 }}>
+    <div className='ag-theme-alpine' style={{ height: 1000 }}>
 
       {/* <button onClick={pushMeClicked}>Push me</button> */}
       <div>
