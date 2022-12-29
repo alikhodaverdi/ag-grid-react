@@ -40,7 +40,11 @@ function App() {
   const [rowData, setRowData] = useState()
 
   const [columnDefs, setColumnDefs] = useState([
-    { field: 'athlete', filter: 'agTextColumnFilter' },
+    {
+      field: 'athlete',
+      floatingFilter: true,
+      filter: 'agTextColumnFilter',
+    },
     { field: 'age', filter: 'agNumberColumnFilter' },
     { field: 'country' },
     { field: 'year' },
