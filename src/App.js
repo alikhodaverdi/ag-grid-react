@@ -7,6 +7,7 @@ import { useState, useEffect, useMemo } from 'react';
 import 'ag-grid-community/dist/styles/ag-grid.css'
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css'
 
+import YearFilter from './Components/YearFilter';
 
 // const SimpleComp = p => {
 
@@ -47,7 +48,15 @@ function App() {
     },
     { field: 'age', filter: 'agNumberColumnFilter' },
     { field: 'country' },
-    { field: 'year' },
+    {
+      field: 'year',
+      filter: YearFilter,
+      filterParams: {
+        title: 'Year Filter',
+        values: [2000, 2004, 2006]
+      },
+      floatingFilter: true
+    },
     { field: 'date' },
     { field: 'sport' },
     { field: 'gold' },
