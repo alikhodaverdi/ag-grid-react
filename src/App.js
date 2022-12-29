@@ -7,48 +7,99 @@ import { useState, useEffect, useMemo } from 'react';
 import 'ag-grid-community/dist/styles/ag-grid.css'
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css'
 
+
+// const SimpleComp = p => {
+
+//   const onDollar = useCallback(() => window.alert('Dollar ' + p.value));
+//   const onAt = useCallback(() => window.alert('At' + p.value));
+
+//   return (
+//     <div className=''>
+//       <button onClick={onDollar}>$</button>
+//       <button onClick={onAt}>@</button>
+//     </div>
+//   )
+// }
+
+const MyComp = params => {
+  const renderCountRef = useRef(1);
+  return (
+    <div><b>({renderCountRef.current++})</b>{params.value}</div>
+  )
+}
+
+
+
+
 function App() {
 
   const gridRef = useRef()
 
-  const [rowData, setRowData] = useState([
-    { make: 'Ford', model: 'focus', price: 4000 },
-    { make: 'Pride', model: 'saipa', price: 3000 },
-    { make: 'Toyota', model: 'Celica', price: 7000 },
-  ]);
+
+
+  const [rowData, setRowData] = useState()
 
   const [columnDefs, setColumnDefs] = useState([
-    { field: 'make', sortable: true, filter: true },
-    { field: 'model', sortable: true, filter: true },
-    { field: 'price', sortable: true, filter: true }
+    { field: 'athlete', filter: 'agTextColumnFilter' },
+    { field: 'age', filter: 'agNumberColumnFilter' },
+    { field: 'country' },
+    { field: 'year' },
+    { field: 'date' },
+    { field: 'sport' },
+    { field: 'gold' },
+    { field: 'silver' },
+    { field: 'bronze' },
+    { field: 'total' }
   ]);
 
+
   useEffect(() => {
-    fetch('https://www.ag-grid.com/example-assets/row-data.json')
+    fetch('https://www.ag-grid.com/example-assets/olympic-winners.json')
       .then(result => result.json())
       .then(rowData => setRowData(rowData))
-  })
+  }, []);
 
   const defaultColDef = useMemo(() => ({
-    sortable: true,
-    filter: true
+    flex: 1,
+    // filterParams: {
+    //   buttons: ['apply', 'clear']
+    // }
   }), [])
 
-  const cellClickedListener = useCallback(e => {
-    console.log('cellClicked', e);
-  })
+  // const cellClickedListener = useCallback(e => {
+  //   console.log('cellClicked', e);
+  // })
 
-  const pushMeClicked = useCallback(e => {
-    gridRef.current.api.deselectAll()
-  })
+  // const pushMeClicked = useCallback(e => {
+  //   gridRef.current.api.deselectAll()
+  // })
+
+  const savedFilterState = useRef()
+
+  const onBtSave = useCallback(() => {
+    const filterModel = gridRef.current.api.getFilterModel();
+    console.log('saving Filter Model', filterModel);
+    savedFilterState.current = filterModel;
+  }, [])
+
+  const onBtApply = useCallback(() => {
+    const filterModel = savedFilterState.current;
+    console.log('Applying Filter Model', filterModel);
+    gridRef.current.api.setFilterModel(filterModel)
+  }, [])
+
+
 
   return (
     <div className='ag-theme-alpine' style={{ height: 500 }}>
 
-      <button onClick={pushMeClicked}>Push me</button>
+      {/* <button onClick={pushMeClicked}>Push me</button> */}
+      <div>
+        <button onClick={onBtSave}>Save</button>
+        <button onClick={onBtApply}>Apply</button>
+      </div>
       <AgGridReact
         ref={gridRef}
-        onCellClicked={cellClickedListener}
         rowData={rowData}
         columnDefs={columnDefs}
         defaultColDef={defaultColDef}
